@@ -63,6 +63,25 @@ services:
       MONGO_HOST: mongo
       MONGO_PORT: 27017
 
+  api:
+    depends_on:
+      cache:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      producer:
+        condition: service_started
+    build: ./analytics-api
+    container_name: analytics-api
+    ports:
+      - "8000:8000"
+    environment:
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      MONGO_USER: root
+      MONGO_PASS: asdf
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
 
 
 
