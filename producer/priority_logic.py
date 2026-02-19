@@ -2,7 +2,7 @@ import json
 
 
 def return_json_data():
-    with open('../data/border_alerts.json', 'r') as file:
+    with open('data/border_alerts.json', 'r') as file:
         data = json.load(file)
         return data
 

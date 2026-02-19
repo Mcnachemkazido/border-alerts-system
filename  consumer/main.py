@@ -1,18 +1,18 @@
-import redis
+from redis_connection import conn_redis
+from mongo_connection import mongo_coll
+from datetime import datetime
 import json
 
 
-r = redis.Redis(host='localhost',port=6379,decode_responses=True)
-
 while True:
-    if r.llen('urgent_queue') > 0:
-        data = r.brpop(['urgent_queue'])
+    if conn_redis.llen('urgent_queue') > 0:
+        data = conn_redis.brpop(['urgent_queue'])
         data = json.loads(data[1])
-        print(data)
-        print("AAAAAAAAAA")
+        data['insertion_time'] = datetime.now().isoformat()
+        mongo_coll.insert_one(data)
 
     else:
-        data = r.brpop(['normal_queue'])
+        data = conn_redis.brpop(['normal_queue'])
         data = json.loads(data[1])
-        print(data)
-        print("BBBBBBBBBBBBB")
+        data['insertion_time'] = datetime.now().isoformat()
+        mongo_coll.insert_one(data)
